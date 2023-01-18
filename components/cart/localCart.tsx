@@ -1,29 +1,30 @@
 import { useState, useEffect } from "react";
 import CartItem from "./cartItem";
 import CartTotal from "./cartTotal";
-import Router from "next/router";
 import type { Stock, ShoppingCart } from "../../types";
 import Link from "next/link";
 import styles from "../../styles/Cart.module.css";
+import { useDispatch } from "react-redux";
+import { addLocalCart } from "../features/Stocks";
 
 const Local = () => {
   const [data, setData] = useState<[{stock_id: Stock[]}] | []>([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setData(JSON.parse(localStorage.getItem("shoppingCart") || "{}"));
   }, []);
 
-  const handleDelete = (cart: any, id: number) => {
-    const deleted = cart.stock_id.filter((item: Stock) => item.id !== id);
-    cart.stock_id = deleted;
-    localStorage.setItem("shoppingCart", JSON.stringify([cart]));
-    Router.reload();
-  };
+  useEffect(() => {
+    const localCart = JSON.parse(localStorage.getItem("shoppingCart") || "{}");
+    dispatch(addLocalCart(localCart));  
+  }, []);
 
   return (
     <>
-      <CartItem data={data} handleDelete={handleDelete} />
-      <CartTotal data={data} />
+      <CartItem />
+      <CartTotal />
       <div
         style={{ display: data[0]?.stock_id.length ? "block" : "none" }}
         className={styles.logoutFrame}

@@ -8,6 +8,15 @@ import Footer from "../components/Footer";
 import PageTop from "../components/pageTop";
 import Search from "../components/Search";
 import Router from "next/router";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import stocksReducer from "../components/features/Stocks";
+
+const cartStocks = configureStore({
+  reducer: {  
+    stock: stocksReducer
+  }
+})
 
 export default function Home() {
   // 検索機能
@@ -51,35 +60,37 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>-JORDANS-中古NIKEスニーカー販売</title>
-        <meta name="jordans" content="sneakers NIKE" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <Header />
-      <main className={styles.main}>
-        <div className={styles.mainFlex}>
-          <Sidebar
-            onClick={handleClick}
-            data={data}
-            handleFrequencyChange={handleFrequencyChange}
-          />
-          <div className={styles.mains}>
-            <div className={styles.search}>
-              <Search
-                onChange={handleSearch}
-                onClick={handleClick}
-                data={data}
-                handleFrequencyChange={handleFrequencyChange}
-              />
+    <Provider store={cartStocks}>
+      <div className={styles.container}>
+        <Head>
+          <title>-JORDANS-中古NIKEスニーカー販売</title>
+          <meta name="jordans" content="sneakers NIKE" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </Head>
+        <Header />
+        <main className={styles.main}>
+          <div className={styles.mainFlex}>
+            <Sidebar
+              onClick={handleClick}
+              data={data}
+              handleFrequencyChange={handleFrequencyChange}
+            />
+            <div className={styles.mains}>
+              <div className={styles.search}>
+                <Search
+                  onChange={handleSearch}
+                  onClick={handleClick}
+                  data={data}
+                  handleFrequencyChange={handleFrequencyChange}
+                />
+              </div>
+              <ItemList />
             </div>
-            <ItemList />
           </div>
-        </div>
-      </main>
-      <Footer />
-      <PageTop />
-    </div>
+        </main>
+        <Footer />
+        <PageTop />
+      </div>
+    </Provider>
   );
 }

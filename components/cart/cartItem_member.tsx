@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
-import useSWR from "swr";
 import Image from "next/image";
 import { useCookie } from "../useCookie";
-import type { Stock, ShoppingCart } from "../../types";
+import type { ShoppingCart } from "../../types";
 import styles from "../../styles/Cart.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart } from "../features/Stocks";
 
-const CartItem_members = (props: {
-  data: [ShoppingCart] | [];
-  handleDelete: (cart: ShoppingCart, id: number) => void;
-}) => {
+const CartItem_members = () => {
   const userID = useCookie();
-  const [cart, setCart] = useState(props.data);
 
-  useEffect(() => {
-    setCart(props.data);
-  }, [props.data]);
+  const { cart, loading }: {cart: any, error: any, loading: any} = useSelector((state: any) => state.stock);
+
+  const dispatch = useDispatch();
+
+  const handleDelete = (id: number) => {
+    fetch(
+      `
+    /api/getCart/${id}`,
+      {
+        method: "DELETE",
+      }
+    ).then((res) => {
+      dispatch(getCart(userID));
+    })
+  };
 
   const noItem = <p>カートの中身はありません</p>;
 
@@ -52,7 +60,7 @@ const CartItem_members = (props: {
                   alt="削除ボタン"
                   width={30}
                   height={30}
-                  onClick={() => props.handleDelete(content, content.stocks.id)}
+                  onClick={() => handleDelete(content.stocks.id)}
                 />
               </li>
             </ul>
@@ -63,7 +71,14 @@ const CartItem_members = (props: {
     </ul>
   );
 
-  return <div>{cart?.length ? cartList : noItem}</div>;
+  return (
+    <div>
+      {loading && <p>Loading...</p>}
+      {cart && 
+        <div>{cart?.length ? cartList : noItem}</div>
+      }
+    </div>
+  )
 };
 
 export default CartItem_members;

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../styles/MyPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "../../lib/supabase-client";
 import useSWR from "swr";
+import { useDispatch, useSelector } from "react-redux";
+import { getFav } from "../features/favStocks";
 
 const fetcher = (resource: RequestInfo | URL, init: RequestInit | undefined) =>
   fetch(resource, init).then((res) => res.json());
@@ -17,14 +19,23 @@ const fetcher = (resource: RequestInfo | URL, init: RequestInit | undefined) =>
 function FavoriteList() {
   const [flag, setFlag] = useState(false);
 
-  const { data, error, mutate } = useSWR(
-    `
-    /api/myPage/getFavoriteItems`,
-    fetcher
-  );
+  // const { data, error, mutate } = useSWR(
+  //   `
+  //   /api/myPage/getFavoriteItems`,
+  //   fetcher
+  // );
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getFav());  
+  }, [])
+
+  const data = useSelector((state:any) => state.favStock.fav);
+  console.log(data);
+
+  // if (error) return <div>failed to load</div>;
+  // if (!data) return <div>loading...</div>;
 
   //Top2を抽出した配列を定義
   const createTopData = () => {
@@ -162,10 +173,10 @@ function FavoriteList() {
                           .delete()
                           .eq("id", favoriteItem?.id);
 
-                        mutate(
-                          `
-                          /api/getFavoriteItems`
-                        );
+                        // mutate(
+                        //   `
+                        //   /api/getFavoriteItems`
+                        // );
                       }}
                       className={styles.btn}
                     />
@@ -214,7 +225,7 @@ function FavoriteList() {
                               .from("favorite_items")
                               .delete()
                               .eq("id", favoriteItem?.id);
-                            mutate(`/api/getFavoriteItems`);
+                            // mutate(`/api/getFavoriteItems`);
                           }}
                           className={styles.btn}
                         />

@@ -1,4 +1,3 @@
-import useSWR, { mutate } from "swr";
 import { useEffect, useState } from "react";
 import { useCookie } from "../useCookie";
 import CartTotalMember from "./cartTotal_member";
@@ -6,53 +5,28 @@ import Router from "next/router";
 import type { Stock, ShoppingCart } from "../../types";
 import styles from "../../styles/Cart.module.css";
 import CartItem_members from "./cartItem_member";
-
-const fetcher = (resource: string): Promise<any> =>
-  fetch(resource).then((res) => res.json());
+import { useDispatch, useSelector } from "react-redux";
+import { addLocalCart, getCart } from "../features/Stocks";
 
 const Members = () => {
   const userID = useCookie();
 
-  // ローカルストレージ内のデータがあるか確認
-  const [localData, setLocalData] = useState<any[]>([]);
+  // Redux storeの中のstateにカートの中身を格納
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setLocalData(JSON.parse(localStorage.getItem("shoppingCart") || "{}"));
-  }, []);
+    const localCart = JSON.parse(localStorage.getItem("shoppingCart") || "{}");
+    dispatch(getCart(userID));
+    dispatch(addLocalCart(localCart));  
+  }, [userID])
 
-  // OK サーバ上のデータを取得
-  let { data, error } = useSWR(
-    `
-    /api/getCart/${userID}`,
-    fetcher
-    // ユーザのカートのデータを取得
-  );
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
-
-  // カート内商品削除
-  const handleDelete = (cart: ShoppingCart, id: number) => {
-    fetch(
-      `
-    /api/getCart/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    mutate(
-      `
-    /api/getCart/${userID}`,
-      fetcher
-    );
-    if (error) return <div>failed to load</div>;
-    if (!data) return <div>loading...</div>;
-
-    Router.push("/cart");
-  };
+  // state(カートの中身)を取得
+  const cart = useSelector((state:any) => state.stock.cart);
+  const localData = useSelector((state:any) => state.stock.localCart);
 
   // ログイン前のカート内商品をログイン後のカートに移動
   const handleCombine = (cart: ShoppingCart[]) => {
-    console.log(cart);
     for (const localItem of localData[0]?.stock_id) {
       if (
         cart?.some((serverItem: any) => serverItem.stock_id === localItem.id)
@@ -61,10 +35,13 @@ const Members = () => {
       }
       fetch(`/api/getCart/${localItem.id}`, {
         method: "POST",
+      }).then((res) => {
+        dispatch(getCart(userID));
       });
     }
     localStorage.clear();
-    Router.reload();
+    const localCart = JSON.parse(localStorage.getItem("shoppingCart") || "{}");
+    dispatch(addLocalCart(localCart));
   };
 
   const handleClick = () => {
@@ -74,7 +51,8 @@ const Members = () => {
   // ログイン前のカート内商品をログイン後のカートに移動したくない場合
   const rejectCombine = () => {
     localStorage.clear();
-    Router.reload();
+    const localCart = JSON.parse(localStorage.getItem("shoppingCart") || "{}");
+    dispatch(addLocalCart(localCart));
   };
 
   return (
@@ -98,7 +76,7 @@ const Members = () => {
           </ul>
           <button
             className={styles.yes_btn}
-            onClick={() => handleCombine(data)}
+            onClick={() => handleCombine(cart)}
           >
             はい
           </button>
@@ -107,9 +85,9 @@ const Members = () => {
           </button>
         </div>
       </div>
-      <CartItem_members data={data} handleDelete={handleDelete} />
-      <CartTotalMember data={data} />
-      <div style={{ display: data?.length ? "block" : "none" }}>
+      <CartItem_members />
+      <CartTotalMember />
+      <div style={{ display: cart?.length ? "block" : "none" }}>
         <input
           type="button"
           className="idbutton"

@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styles from "../../styles/Cart.module.css";
-import type {Stock} from "../../types"
 
-const CartTotalMember = (props: any) => {
-  const [cart, setCart] = useState(props.data);
+const CartTotalMember = () => {
+  const { cart } = useSelector((state: any) => state.stock)
 
   const initial: number = cart
     .map((stock: any) => stock.stocks.price)
     .reduce((prev: number, curr: number) => prev + curr, 0);
   
   const [total, setTotal] = useState(initial);
-
-  useEffect(() => {
-    setCart(props.data);
-  }, [props.data]);
 
   useEffect(() => {
     setTotal(initial);
