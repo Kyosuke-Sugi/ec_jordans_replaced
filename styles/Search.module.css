@@ -34,6 +34,9 @@
   background-color: rgb(99, 114, 139);
   border-bottom: 2px solid rgb(89, 93, 95);
 }
+.searchIcon {
+  margin: 2.5px 13px;
+}
 
 .mains {
   display: flex;

@@ -32,6 +32,13 @@
   text-align: right;
   margin-top: 0;
 }
+
+.snsIcon {
+  width: 30px;
+  height: 30px;
+  color: #35325c;
+  margin: 0 5px 0 0;
+}
 @media (max-width: 1170px) {
   .h3tag {
     font-size: 12px;

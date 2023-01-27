@@ -1,54 +1,78 @@
 import Link from "next/link";
-import useSWR from "swr";
-import { Stock } from "../types";
 import Image from "next/image";
 import styles from "../styles/itemList.module.css";
-import { supabase } from "../lib/supabase-client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PagingList from "./paging/paging";
-
-const fetcher = async (key: string, page: number, limit: number) => {
-  const start = limit * (page - 1);
-  const end = start + limit - 1;
-  const { data } = await supabase.from(key).select(`*, items("*")`).range(start, end);
-  return data;
-};
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { getPagingStocks, setKeyword, nextPage, prevPage, jumpPage } from "./features/allStocks";
+import Router from "next/router";
+import { AllStocks, Stock } from "../types";
+import { AppDispatch } from "../pages";
 
 export default function ItemList() {
+
   // 1ページの商品数
-  const limit = 15;
-
+  const limit = useSelector((state: AllStocks) => state.allStocks.limit);
+  
   // 現在のページ
-  const [page, setPage] = useState(1);
-  
-  // 商品数の合計
-  const [total, setTotal] = useState(0);
+  const page = useSelector((state: AllStocks) => state.allStocks.page);
 
-  // 1ページ分の商品を取得
-  const { data: stocks, error } = useSWR(["stocks", page, limit], fetcher);
+  // 検索に一致する商品数の合計
+  const total = useSelector((state: AllStocks) => state.allStocks.total);
+
+  // 全商品数の合計
+  const allTotal = useSelector((state: AllStocks) => state.allStocks.allTotal);
   
-  // ページング番号を表示するため、最初にsupabaseのstocksを全て持ってくる
-  useEffect(() => {
-    const getAllData = async() => {
-      const res = await fetch(`/api/getStock`);
-      const allData = await res.json();
-      setTotal(allData.length);
-    } 
-    getAllData();
-  }, [])
+  // 表示する商品データ
+  const stocks = useSelector((state: AllStocks) => state.allStocks.stock);
   
-  // ページの番号(1,2,3・・・)をクリックした時の動作
-  const handlePage = (page: number) => {
-    setPage(page);
+  // 検索ワード
+  const keyword = useSelector((state: AllStocks) => state.allStocks.keyword);
+
+  const backPage = () => {
+    dispatch(setKeyword(""));
+    Router.reload();
   }
+  // ページが変わるたびに表示する商品データを更新
+  const dispatch: AppDispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(getPagingStocks(page, limit));
+  }, [page]);
 
-  if (error) return <div>failed to load</div>;
-  if (!stocks) return <div>loading...</div>;
+  const pagingList = (
+    <div className={styles.pagingPosition}>
+        <div className={styles.pagingGroup}>
+          <button 
+            onClick={() => dispatch(prevPage())} 
+            disabled={page === 1}
+            className={styles.pagingBtn}
+          >
+            <ArrowBackIos />
+            <span>Prev</span>
+          </button>
+          <PagingList />          
+          <button 
+            onClick={() => dispatch(nextPage())} 
+            disabled={page === Math.ceil(total / limit)} 
+            className={styles.pagingBtn}
+          >
+            <span>Next</span>
+            <ArrowForwardIos />
+          </button>
+        </div>
+      </div>
+  )
+
   
   return (
     <>
+      {keyword &&
+        <p className={styles.result}>「{keyword}」の検索結果: {total}件 / 全{allTotal}品</p>
+      }
       <div className={styles.gridBox}>
-        {stocks.map((stock: any) => {
+        {stocks.map((stock: Stock) => {
           return (
               <div className={styles.itemdiv} key={`image${stock.id}`}>
                 <Link legacyBehavior href={`/${stock.id}`} key={stock.id}>
@@ -75,30 +99,20 @@ export default function ItemList() {
           );
         })}
       </div>
-      <div className={styles.pagingPosition}>
-        <div className={styles.pagingGroup}>
-          <button 
-            onClick={() => setPage(page - 1)} 
-            disabled={page === 1}
-            className={styles.pagingBtn}
-          >
-            Prev 
-          </button>
-          <PagingList 
-            dataTotal={total} 
-            handlePage={handlePage} 
-            limit={limit}
-            page={page} 
-          />          
-          <button 
-            onClick={() => setPage(page + 1)} 
-            disabled={page === Math.ceil(total / limit)} 
-            className={styles.pagingBtn}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      {keyword?
+       (
+       <div className={styles.result}>
+        <Link href={"/"} legacyBehavior>
+          <a onClick={() => backPage()}>
+            全商品表示{"("}トップページ{")"}に戻る
+          </a>
+        </Link>
+       </div>
+       )
+       :
+       pagingList
+      }
+      
     </>
   );
 }

@@ -1,23 +1,21 @@
-import useSWR from "swr";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { OrderItems, Stock } from "../../types";
-import { useCookie } from "../useCookie";
 import styles from "../../styles/MyPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesUp, faAnglesDown } from "@fortawesome/free-solid-svg-icons";
-
-const fetcher = (resource: RequestInfo | URL, init: RequestInit | undefined) =>
-  fetch(resource, init).then((res) => res.json());
+import { useDispatch, useSelector } from "react-redux";
+import { getSettlement } from "../features/mypageStocks";
 
 function SettlementHistory() {
   const [flag, setFlag] = useState(true);
 
-  const { data, error } = useSWR(`/api/getOrderItems/orderItems`, fetcher);
-  if (error) return <div>購入履歴はありません</div>;
-  if (!data) return <div>loading...</div>;
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getSettlement());
+  }, [])
 
+  const data = useSelector((state:any) => state.myStocks.settlement);
 
   //Top2を抽出した配列を定義
   const createTopData = () => {

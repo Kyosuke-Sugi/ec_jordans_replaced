@@ -41,6 +41,12 @@
   }
 }
 
+/* 検索結果 */
+.result {
+  text-align: center;
+  margin: 50px 0;
+}
+
 /* ページング機能 */
 .pagingPosition {
   margin: 30px 0;
@@ -58,6 +64,8 @@
   padding: 15px;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .pagingBtn:hover {
   background-color: rgba(147, 115, 176, .7);

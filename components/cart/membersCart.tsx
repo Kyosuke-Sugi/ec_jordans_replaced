@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCookie } from "../useCookie";
 import CartTotalMember from "./cartTotal_member";
 import Router from "next/router";
-import type { Stock, ShoppingCart } from "../../types";
+import type { Stock, ShoppingCart, CartState } from "../../types";
 import styles from "../../styles/Cart.module.css";
 import CartItem_members from "./cartItem_member";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,14 +22,14 @@ const Members = () => {
   }, [userID])
 
   // state(カートの中身)を取得
-  const cart = useSelector((state:any) => state.stock.cart);
-  const localData = useSelector((state:any) => state.stock.localCart);
+  const cart = useSelector((state: {stock: CartState}) => state.stock.cart);
+  const localData = useSelector((state: {stock: CartState}) => state.stock.localCart);
 
   // ログイン前のカート内商品をログイン後のカートに移動
   const handleCombine = (cart: ShoppingCart[]) => {
     for (const localItem of localData[0]?.stock_id) {
       if (
-        cart?.some((serverItem: any) => serverItem.stock_id === localItem.id)
+        cart?.some((serverItem: {stock_id: any}) => serverItem.stock_id === localItem.id)
       ) {
         continue;
       }

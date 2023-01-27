@@ -1,4 +1,4 @@
-import React, { use, useEffect } from "react";
+import React from "react";
 import SignIn from "../../components/SignIn";
 import Link from "next/link";
 import Header from "../../components/Header";
@@ -12,11 +12,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import favStockReducer from "../../components/features/favStocks";
+import StockReducer from "../../components/features/mypageStocks";
 
-const favStocks = configureStore({
+const myStocks = configureStore({
   reducer: {
-    favStock: favStockReducer
+    myStocks: StockReducer
   }
 })
 
@@ -24,7 +24,7 @@ const MyPage = () => {
   return (
     <>
       <SignIn>
-        <Provider store={favStocks}>
+        <Provider store={myStocks}>
           <Header />
           <div className={styles.mypage_main_content}>
             <div className={styles.main_title_wrapper}>

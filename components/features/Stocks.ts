@@ -1,22 +1,21 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { ShoppingCart, Stock } from "../../types";
 
-// export const getCart: any = (id: any) => {
-//     return async (dispatch: any) => {
-//         const res = await fetch(`/api/getCart/${id}`);
-//         const data = await res.json();
-//         console.log(data);
-//         dispatch(setCart(data));
-//     }
-// }
+interface PostState {
+    cart: [] | Stock[];
+    localCart: [] | [{stock_id: any}];
+    loading: boolean
+}
 
-export const getCart: any = createAsyncThunk("cart/getCart", async (id: any) => {
-    return await fetch(`/api/getCart/${id}`).then((res) => res.json());
+export const getCart: any = createAsyncThunk("cart/getCart", async (id: number) => {
+    return await fetch(`/api/getCart/${id}`).then((res) => res.json()) as ShoppingCart;
 });
 
-export const getLocalCart: any = () => {
+export const getLocalCart = () => {
     const data = JSON.parse(localStorage.getItem("shoppingCart") || "{}");
     addLocalCart(data[0]?.stock_id);
 }
+
 
 export const stockSlice = createSlice({
     name: "stocks",
@@ -24,7 +23,7 @@ export const stockSlice = createSlice({
         cart: [],
         localCart: [],
         loading: false,
-    },
+    } as PostState,
     reducers: {
         addLocalCart: (state, action) => {
             state.localCart = action.payload
@@ -33,14 +32,15 @@ export const stockSlice = createSlice({
             state.localCart = action.payload
         },
     },
-    extraReducers: {
-        [getCart.pending]: (state) => {
-            state.loading = true;
-        },
-        [getCart.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.cart = action.payload;
-        },
+    extraReducers (builder) {
+        builder
+            .addCase(getCart.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getCart.fulfilled, (state, action: PayloadAction<Stock[]>) => {
+                state.loading = false;
+                state.cart = action.payload;
+            })
     },
 })
 

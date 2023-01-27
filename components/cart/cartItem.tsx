@@ -1,19 +1,14 @@
-import { useEffect, useState } from "react";
-import useSWR from "swr";
 import Image from "next/image";
-import { useCookie } from "../useCookie";
-import type { Stock, ShoppingCart } from "../../types";
+import type { CartState, Stock } from "../../types";
 import styles from "../../styles/Cart.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { addLocalCart, deleteLocalCart } from "../features/Stocks";
-import Router from "next/router";
+import { deleteLocalCart } from "../features/Stocks";
 
-const CartItem = () => {
-  
-  const cart = useSelector((state:any) => state.stock.localCart[0]);
+const CartItem = () => {  
+  const cart = useSelector((state: {stock: CartState}) => state.stock.localCart[0]);
   const dispatch = useDispatch();
 
-  const handleDelete = (cart: any, id: number) => {
+  const handleDelete = (cart: {stock_id: Stock[]}, id: number) => {
     const deleted = cart.stock_id.filter((item: Stock) => item.id !== id);
     dispatch(deleteLocalCart([{stock_id: deleted}]));
     localStorage.setItem("shoppingCart", JSON.stringify([{stock_id: deleted}]));
@@ -24,7 +19,7 @@ const CartItem = () => {
 
   const cartList = (
     <ul className={styles.cart_ul}>
-      {cart?.stock_id.map((content: any) => (
+      {cart?.stock_id.map((content: Stock) => (
         <li className={styles.cart_li} key={content.id}>
           <div>
             <div>

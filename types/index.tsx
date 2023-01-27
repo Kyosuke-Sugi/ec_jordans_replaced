@@ -46,13 +46,9 @@ export type Users = {
 
 export type FavoriteItem = {
   id: number;
-  itemId: number;
-  cookieName: string | undefined;
-  name: string;
-  price: number;
-  size: number;
-  imagePath: string;
-  condition: string;
+  user_id: number;
+  stock_id: number;
+  stocks: Stock;
 };
 
 export type FavoriteItem2 = {
@@ -69,7 +65,7 @@ export type FavoriteItem2 = {
 export type ShoppingCart = {
   id: number;
   user_id: number
-  stock_id: number[];
+  stock_id: number;
   stocks: Stock;
 };
 
@@ -123,3 +119,22 @@ export type TopUsedItems = {
   itemStatus: "完了" | "買取処理中";
   id: number;
 };
+
+// Redux Store用
+
+export type AllStocks = {
+  allStocks: {
+    stock: [] | Stock[];
+    page: number;
+    limit: number;
+    total: number;
+    allTotal: number;
+    keyword: string;
+  }
+}
+
+export type CartState = {
+  cart: ShoppingCart[]; 
+  localCart: [{stock_id: any}]; 
+  loading: boolean
+}

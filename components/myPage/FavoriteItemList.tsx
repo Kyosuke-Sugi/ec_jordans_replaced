@@ -9,21 +9,11 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { supabase } from "../../lib/supabase-client";
-import useSWR from "swr";
 import { useDispatch, useSelector } from "react-redux";
-import { getFav } from "../features/favStocks";
-
-const fetcher = (resource: RequestInfo | URL, init: RequestInit | undefined) =>
-  fetch(resource, init).then((res) => res.json());
+import { getFav } from "../features/mypageStocks";
 
 function FavoriteList() {
   const [flag, setFlag] = useState(false);
-
-  // const { data, error, mutate } = useSWR(
-  //   `
-  //   /api/myPage/getFavoriteItems`,
-  //   fetcher
-  // );
 
   const dispatch = useDispatch();
 
@@ -31,11 +21,7 @@ function FavoriteList() {
     dispatch(getFav());  
   }, [])
 
-  const data = useSelector((state:any) => state.favStock.fav);
-  console.log(data);
-
-  // if (error) return <div>failed to load</div>;
-  // if (!data) return <div>loading...</div>;
+  const data = useSelector((state:any) => state.myStocks.fav);
 
   //Top2を抽出した配列を定義
   const createTopData = () => {

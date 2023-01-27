@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useCookie } from "../useCookie";
-import type { ShoppingCart } from "../../types";
+import type { CartState, ShoppingCart } from "../../types";
 import styles from "../../styles/Cart.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../features/Stocks";
@@ -8,7 +8,7 @@ import { getCart } from "../features/Stocks";
 const CartItem_members = () => {
   const userID = useCookie();
 
-  const { cart, loading }: {cart: any, error: any, loading: any} = useSelector((state: any) => state.stock);
+  const { cart, loading }: {cart: ShoppingCart[], loading: boolean} = useSelector((state: {stock: CartState}) => state.stock);
 
   const dispatch = useDispatch();
 

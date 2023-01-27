@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import styles from "../../styles/Cart.module.css";
+import { CartState, ShoppingCart } from "../../types";
 
 const CartTotalMember = () => {
-  const { cart } = useSelector((state: any) => state.stock)
+  const { cart } = useSelector((state: {stock: CartState}) => state.stock)
 
   const initial: number = cart
-    .map((stock: any) => stock.stocks.price)
+    .map((stock: ShoppingCart) => stock.stocks.price)
     .reduce((prev: number, curr: number) => prev + curr, 0);
   
   const [total, setTotal] = useState(initial);

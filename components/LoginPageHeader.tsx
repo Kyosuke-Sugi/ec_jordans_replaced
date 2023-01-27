@@ -8,6 +8,7 @@ import {
   faUser,
   faSpaghettiMonsterFlying,
 } from "@fortawesome/free-solid-svg-icons";
+import { HelpOutline, HowToReg, Person, ShoppingBasketOutlined, ShoppingCartOutlined } from "@mui/icons-material";
 
 export default function Header() {
   const router = useRouter();
@@ -33,7 +34,8 @@ export default function Header() {
         <div className={styles.headerin}>
           <li key="signup" className={styles.lis}>
             <Link href="/signup" className={styles.link}>
-              会員登録
+              <HowToReg className={styles.icon} />
+              <span>会員登録</span>
             </Link>
           </li>
         </div>
@@ -42,11 +44,11 @@ export default function Header() {
       return (
         <div className={styles.headerin}>
           <li key="signup" className={styles.lis}>
-            <Link href="/mypage" className={styles.link}>
-              <FontAwesomeIcon icon={faUser} />
-              {name}さん
-            </Link>
-          </li>
+              <Link href="/mypage" className={styles.link}>
+                <Person className={styles.icon} />
+                <span>{decodeURI(name)}さん</span>
+              </Link>
+            </li>
         </div>
       );
     }
@@ -59,19 +61,22 @@ export default function Header() {
           JORDANS
         </Link>
         <ul className={styles.ul}>
-          <li key="mypage" className={styles.lis}>
+        <li key="mypage" className={styles.lis}>
             <Link href="/cart" className={styles.link}>
-              カート
+              <ShoppingCartOutlined className={styles.icon} />
+              <span>カート</span>
             </Link>
           </li>
           <li key="cart" className={styles.lis}>
             <Link href="/contact" className={styles.link}>
-              お問い合わせ
+              <HelpOutline className={styles.icon} />
+              <span>お問い合わせ</span>
             </Link>
           </li>
           <li key="favorit" className={styles.lis}>
             <Link href="/purchase" className={styles.link}>
-              買取受付
+              <ShoppingBasketOutlined className={styles.icon} />
+              <span>買取受付</span>
             </Link>
           </li>
           {correction()}

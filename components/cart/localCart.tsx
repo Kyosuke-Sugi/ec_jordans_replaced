@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import CartItem from "./cartItem";
 import CartTotal from "./cartTotal";
-import type { Stock, ShoppingCart } from "../../types";
+import type { Stock } from "../../types";
 import Link from "next/link";
 import styles from "../../styles/Cart.module.css";
 import { useDispatch } from "react-redux";

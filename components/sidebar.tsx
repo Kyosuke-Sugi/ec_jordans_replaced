@@ -1,9 +1,38 @@
 import styles from "../styles/Sidebar.module.css";
-import { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import Note from "./Note";
 import Image from "next/image";
+import Router from "next/router";
+import { useDispatch } from "react-redux";
+import { getSeriesResult } from "./features/allStocks";
+import { AppDispatch } from "../pages";
 
-export default function Sidebar(props: any) {
+export default function Sidebar() {
+  // 絞り込み機能
+  
+  const initializedData: {
+    notifyFrequency: string
+  } = {
+    notifyFrequency: "",
+  };
+
+  const [data, setData] = useState(initializedData);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleFrequencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue =
+      e.target.value === data.notifyFrequency ? "" : e.target.value;
+    const newData = { ...data, notifyFrequency: newValue };
+    setData(newData);
+
+    if (e.target.checked) {
+      dispatch(getSeriesResult(newValue));
+    }else{
+      Router.reload();
+    }
+  }; 
+
   return (
     <div className={styles.sidebarBox}>
       <Note />
@@ -19,15 +48,14 @@ export default function Sidebar(props: any) {
 
       <h3 className={styles.title}>SERIES</h3>
       <div className={styles.box}>
-        {/* input onChange={event} ===> if(e.target.checked)  filter e.target.value === item.series   filterで出来た配列を一覧として表示　elseの場合は全画面表示 */}
         <input
           type="checkbox"
           id="posite"
           name="interest"
           value="POSITE SERIES"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "POSITE SERIES"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "POSITE SERIES"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="posite">POSITE SERIES</label>
       </div>
@@ -38,8 +66,8 @@ export default function Sidebar(props: any) {
           name="interest"
           value="AIR FORCE 1 LOW"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "AIR FORCE 1 LOW"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "AIR FORCE 1 LOW"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="force">AIR FORCE 1 LOW</label>
       </div>
@@ -50,8 +78,8 @@ export default function Sidebar(props: any) {
           name="JORDAN1"
           value="JORDAN BRAND 1"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "JORDAN BRAND 1"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "JORDAN BRAND 1"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="JORDAN1">JORDAN BRAND 1</label>
       </div>
@@ -62,8 +90,8 @@ export default function Sidebar(props: any) {
           name="JORDAN5"
           value="JORDAN BRAND 5"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "JORDAN BRAND 5"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "JORDAN BRAND 5"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="JORDAN5">JORDAN BRAND 5</label>
       </div>
@@ -74,8 +102,8 @@ export default function Sidebar(props: any) {
           name="JORDAN6"
           value="JORDAN BRAND 6"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "JORDAN BRAND 6"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "JORDAN BRAND 6"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="JORDAN6">JORDAN BRAND 6</label>
       </div>
@@ -86,8 +114,8 @@ export default function Sidebar(props: any) {
           name="BLAZER"
           value="BLAZER"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "BLAZER"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "BLAZER"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="BLAZER">BLAZER</label>
       </div>
@@ -98,8 +126,8 @@ export default function Sidebar(props: any) {
           name="AIR MAX"
           value="AIR MAX"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "AIR MAX"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "AIR MAX"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="AIR MAX">AIR MAX</label>
       </div>
@@ -110,8 +138,8 @@ export default function Sidebar(props: any) {
           name="DUNK"
           value="DUNK"
           className={styles.hideCheck}
-          checked={props.data.notifyFrequency === "DUNK"}
-          onChange={props.handleFrequencyChange}
+          checked={data.notifyFrequency === "DUNK"}
+          onChange={handleFrequencyChange}
         />
         <label htmlFor="DUNK">DUNK</label>
       </div>

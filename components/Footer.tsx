@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import styles from "../styles/Footer.module.css";
+import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 
 export default function Footer() {
   return (
@@ -16,31 +16,13 @@ export default function Footer() {
         </ul>
         <div className={styles.images}>
           <Link href="https://bit.ly/3upDsNH">
-            <Image
-              src="/images/FacebookLogo.png"
-              alt="FBLogo"
-              width={30}
-              height={30}
-              className={styles.image}
-            />
+            <Facebook className={styles.snsIcon} />
           </Link>
           <Link href="https://www.instagram.com/rakus_partners/?hl=ja">
-            <Image
-              src="/images/InstagramLogo.png"
-              alt="InstLogo"
-              width={30}
-              height={30}
-              className={styles.image}
-            />
+            <Instagram className={styles.snsIcon} />
           </Link>
           <Link href="https://twitter.com/hr_rakus">
-            <Image
-              src="/images/TwitterLogo.png"
-              alt="TwLogo"
-              width={30}
-              height={30}
-              className={styles.image}
-            />
+            <Twitter className={styles.snsIcon} />
           </Link>
         </div>
       </div>

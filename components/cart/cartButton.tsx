@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import Router from "next/router";
-import type { Stock, Item } from "../../types";
+import type { Stock, Item, ShoppingCart } from "../../types";
 import { useCookie } from "../useCookie";
 import useSWR from "swr";
 import styles from "../../styles/CartButton.module.css";
-import { supabase } from "../../lib/supabase-client";
 
-const fetcher = (resource: string): Promise<any> =>
+const fetcher = (resource: string): Promise<ShoppingCart[]> =>
   fetch(resource).then((res) => res.json());
 
 const CartButton = ({ stock }: { stock: Stock }) => {
@@ -66,7 +65,7 @@ const CartButton = ({ stock }: { stock: Stock }) => {
   // ログイン状態
   const memberCartButton = (
     <div className={"member"}>
-      {cart?.some((cartItem: any) => cartItem.stock_id === stock.id) ? (
+      {cart?.some((cartItem: ShoppingCart) => cartItem.stock_id === stock.id) ? (
         <button className={styles.addedCartBtn} onClick={addCartItem} disabled>
           カートに追加済み
         </button>

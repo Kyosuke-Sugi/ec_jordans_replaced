@@ -1,19 +1,21 @@
 import useSWR from "swr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../styles/MyPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesUp, faAnglesDown } from "@fortawesome/free-solid-svg-icons";
-
-const fetcher = (resource: RequestInfo | URL, init: RequestInit | undefined) =>
-  fetch(resource, init).then((res) => res.json());
+import { useDispatch, useSelector } from "react-redux";
+import { getUsedItems } from "../features/mypageStocks";
 
 function UsedItemList() {
   const [flag, setFlag] = useState(false);
 
-  const { data, error } = useSWR(`/api/myPage/getUsedItems`, fetcher);
+  const dispatch = useDispatch();
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  useEffect(() => {
+    dispatch(getUsedItems());
+  }, [])
+
+  const data = useSelector((state:any) => state.myStocks.usedItemList);
 
   //Top2を抽出した配列を定義
   const createTopData = () => {

@@ -3,11 +3,13 @@ import { supabase } from "../lib/supabase-client";
 import CartButton from "../components/cart/cartButton";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { Item, Stock } from "../types";
+import { Stock } from "../types";
 import ToggleFavButton from "../components/ToggleFavButton";
 import PageTop from "../components/pageTop";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/css";
+import { Slider } from "@mui/material";
+import { useEffect, useState } from "react";
 
 export const getStaticPaths = async () => {
   const { data, error } = await supabase.from("stocks").select();
@@ -42,6 +44,30 @@ export async function getStaticProps({ params }: { params: { id: string } }) {
 }
 
 export default function Detail({ stock }: { stock: Stock }) {
+  const marks = [
+    {
+      value: 1.3,
+      label: 'ズーム',
+    },
+  ];
+
+  const [zoom, setZoom] = useState(1);
+
+  useEffect(() => {
+    const active: any = document.querySelector(".splide__slide.is-active");
+    if(document.querySelector(".splide__slide.is-prev")) {
+      const prev: any = document.querySelector(".splide__slide.is-prev");
+      prev.style.transform = `scale(1)`
+    }
+    if(document.querySelector(".splide__slide.is-next")) {
+      const next: any = document.querySelector(".splide__slide.is-next");
+      next.style.transform = `scale(1)`
+    }
+    active.style.transform = `scale(${zoom})`
+  }, [zoom]);
+
+  
+
   return (
     <div>
       <Header />
@@ -57,17 +83,20 @@ export default function Detail({ stock }: { stock: Stock }) {
               <Splide
                 aria-label="商品詳細画像"
                 options={{
-                  autoplay: true, // 自動再生を有効
+                  autoplay: false, // 自動再生を有効
                   interval: 4000, // 自動再生の間隔を3秒に設定
-                  height: 500,
+                  height: 400,
                   width: 600,
                   rewind: true,
                   rewindSpeed: 1000,
                   paginationKeyboard: true,
                 }}
               >
-                <SplideSlide className="splide-container">
+                <SplideSlide 
+                  className="splide-container"
+                  >
                   <Image
+                  // style={{transform: `scale(${zoom})` }}
                     src={`/${stock.image1}`}
                     height={300}
                     width={400}
@@ -75,8 +104,11 @@ export default function Detail({ stock }: { stock: Stock }) {
                     priority
                   />
                 </SplideSlide>
-                <SplideSlide className="splide-container">
+                <SplideSlide 
+                  className="splide-container"
+                  >
                   <Image
+                  // style={{transform: `scale(${zoom})` }}
                     className="sub-image"
                     src={`/${stock.image2}`}
                     height={300}
@@ -85,8 +117,11 @@ export default function Detail({ stock }: { stock: Stock }) {
                     priority
                   />
                 </SplideSlide>
-                <SplideSlide className="splide-container">
+                <SplideSlide 
+                  className="splide-container"
+                  >
                   <Image
+                  // style={{transform: `scale(${zoom})` }}
                     className="sub-image"
                     src={`/${stock.image3}`}
                     height={300}
@@ -95,8 +130,11 @@ export default function Detail({ stock }: { stock: Stock }) {
                     priority
                   />
                 </SplideSlide>
-                <SplideSlide className="splide-container">
+                <SplideSlide 
+                  className="splide-container"
+                  >
                   <Image
+                  // style={{transform: `scale(${zoom})` }}
                     className="sub-image"
                     src={`/${stock.image4}`}
                     height={300}
@@ -105,8 +143,11 @@ export default function Detail({ stock }: { stock: Stock }) {
                     priority
                   />
                 </SplideSlide>
-                <SplideSlide className="splide-container">
+                <SplideSlide 
+                  className="splide-container"
+                >
                   <Image
+                  // style={{transform: `scale(${zoom})`}}
                     className="sub-image"
                     src={`/${stock.image5}`}
                     height={300}
@@ -126,6 +167,18 @@ export default function Detail({ stock }: { stock: Stock }) {
                   object-fit: cover;
                 }
               `}</style>
+            </div>
+            <div style={{textAlign: 'center'}}>
+              <Slider 
+                marks={marks}
+                step={0.01}
+                max={1.6}
+                min={1}
+                value={zoom}
+                onChange={(event:any) => {setZoom(event.target.value)}}
+                size='small'
+                style={{width: '350px', color: "navy"}}
+              />
             </div>
           </div>
           <div className="right-side-wrapper">

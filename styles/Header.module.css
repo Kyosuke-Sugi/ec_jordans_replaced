@@ -47,9 +47,11 @@
 .ul {
   list-style: none;
   display: flex;
+  align-items: center;
   text-align: center;
-  margin-bottom: 0;
+  margin-bottom: 19px;
   margin-left: 100px;
+  min-width: 600px;
 }
 
 .lis {
@@ -57,8 +59,8 @@
   font-weight: 500;
   display: inline-block;
   box-sizing: border-box;
+  padding: 0 15px;
   padding-bottom: 0;
-  width: 120px;
   color: #2c3047ba;
 }
 
@@ -74,14 +76,22 @@
   line-height: 100%;
 }
 
+.icon {
+  color: #2c3047ba;
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+  padding-right: 3px;
+}
+
 .button {
   background-color: rgb(94, 177, 207);
-  border-bottom: 5px solid rgb(61, 143, 173);
+  box-shadow: 0 2px 2px rgb(61 143 173);
   margin-left: 18px;
   font-family: "Yu Gothic";
   font-weight: bold;
-  margin-bottom: 23px;
-  width: 90px;
+  width: 135px;
+  height: 30px;
   color: rgb(255, 255, 255);
 }
 .button2 {
@@ -93,6 +103,9 @@
   margin-bottom: 23px;
   width: 90px;
   color: rgb(255, 255, 255);
+}
+.loginFont {
+  margin-right: 5px;
 }
 @media (max-width: 1170px) {
   .lis {
@@ -126,7 +139,7 @@
 
 .button:hover {
   background-color: rgb(125, 188, 211);
-  border-bottom: 5px solid rgb(79, 148, 173);
+  box-shadow: 0 2px 2px rgb(61 143 173) inset;
   color: rgb(255, 255, 255);
 }
 
