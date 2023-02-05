@@ -1,15 +1,8 @@
 import Link from "next/link";
 import styles from "../styles/Header.module.css";
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { useCookie, useCookieOriginal, useName } from "./useCookie";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faSpaghettiMonsterFlying,
-} from "@fortawesome/free-solid-svg-icons";
+import { useCookieOriginal, useName } from "./useCookie";
 import { HelpOutline, HowToReg, Login, Logout, Person, ShoppingBasketOutlined, ShoppingCartOutlined } from "@mui/icons-material";
-import PersonIcon from '@mui/icons-material/Person';
 import { Button } from "@mui/material";
 
 export default function Header() {
@@ -17,7 +10,6 @@ export default function Header() {
   const cookieOriginal = useCookieOriginal();
   const name = useName();
 
-  // event: React.MouseEvent<HTMLInputElement>
   const logout = () => {
     document.cookie = `userID=; Path=/; expires=Fri, 31-Dec-1999 23:59:59 GMT;`;
     document.cookie = `userName=; Path=/; expires=Fri, 31-Dec-1999 23:59:59 GMT;`;
